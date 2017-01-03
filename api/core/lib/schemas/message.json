@@ -33,6 +33,9 @@
 	},
   "subject": {
 	  "type": "Subject of the Message"
+	},
+  "hasRead": {
+	  "type": "boolean"
 	}
   }
 }
