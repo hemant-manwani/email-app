@@ -1,35 +1,89 @@
-/* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-.row.content {
-  /*height: 500;*/
+html, body{
+  min-height: 100%;
+  border: 1px solid blue;
 }
-body{
-  background-image: url("../assets/images/background.jpg");
-  background-repeat: repeat-y;;
+#wrapper{
+  position: relative;
+  height: auto;
 }
-
-/* Set gray background color and 100% height */
-.sidenav {
-  /*background-color: #f1f1f1;*/
-  /*height: 100%;*/
-}
-
-/* Set black background color, white text and some padding */
-footer {
-  background-color: #555;
-  color: white;
-  padding: 15px;
-  bottom: 0;
-  position: fixed;
+section.users.left{
   display: block;
+  position: absolute;
+  top: 0px;
+  bottom: 0;
+  left: 0;
+  width: 30%;
+  min-height: 100%;
+  overflow-y: scroll;
+}
+@media screen and (max-width: 650px){
+  section.users.left{
+    display: none;
+  }
+}
+section.messages.right{
+  position: absolute;
+  top: 0;
+  min-height: 100%;
+  bottom: 0;
+  right: 0;
+  overflow-y: scroll;
+  width: 70%;
+}
+@media screen and (max-width: 650px){
+  section.messages.right{
+    width: 100%;
+  }
+}
+.user-name{
+  font-size: 20px;
+}
+.last-followed{
+  font-size: 10px;
+  margin-top: 10px;
+}
+.left-message{
+  float: left;
+}
+.right-message{
+  float: right;
+}
+.messages ul{
+  margin-bottom: 50px;
+}
+.users ul{
+  margin-top: 50px;
+}
+.messages ul li.list-group-item{
+  margin-bottom: 5px;
+  border: none;
+}
+.search{
+  position: absolute;
+  top: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  padding: 5px;
 }
-
-/* On small screens, set height to 'auto' for sidenav and grid */
-@media screen and (max-width: 767px) {
-  .sidenav {
-    height: auto;
-    padding: 15px;
+.send-message{
+  position: absolute;
+  bottom: 0;
+  left: 0
+  right: 0;
+  width: 100%;
+  padding: 5px;
+}
+.menu-button{
+  display: none;
+}
+@media screen and (max-width: 650px){
+  .menu-button{
+    display: block;
   }
-  .row.content {height: auto;}
+}
+header,footer{
+  width: 100%;
+  background-color: #dadada;
+  min-height: 50px;
 }
