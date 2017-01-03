@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+	"_id": {
+	  "type": "object",
+	  "description": "Unique identifier of message Record"
+	},
+	"from": {
+	  "type": "object",
+    "additionalProperties": false,
+    "properties":{
+      "_id": {
+        "type": "object",
+        "description": "Unique identifier of User"
+      }
+    }
+	},
+  "to": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties":{
+      "_id": {
+        "type": "object",
+        "description": "Unique identifier of User"
+      }
+    }
+	},
+	"body": {
+	  "type": "string",
+    "description": "Body of the Message"
+	},
+  "subject": {
+	  "type": "Subject of the Message"
+	}
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "email_app_api",
+  "version": "1.0.0",
+  "description": "This email app api is used to manage users and their mails",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.16",
+    "q": "^1.4.1",
+    "sendgrid": "^4.7.1",
+    "tv4": "^1.2.7",
+    "tv4-formats": "^2.2.1"
+  }
+}
