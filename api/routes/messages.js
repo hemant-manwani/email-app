@@ -3,6 +3,7 @@ var router = require('express').Router(),
 	Core = require('../core'),
 	Errors = Core.Errors,
 	Message = Core.Resources.Message,
+	User = Core.Resources.User,
   util = Core.Util,
 	config = require('../core/lib/config');
 
@@ -12,7 +13,8 @@ router.get('/messages/:from/:to', function(req, res, next) {
 					{"to":req.params.from, "from": req.params.to}]
 	};
 	criteria = util.getFilters(req.query, criteria);
-	var options = util.createQueryOptions(req.query, config.allowedFields.message);
+	//var options = util.createQueryOptions(req.query, config.allowedFields.message);
+	var options = {sort: {created: -1}, skip:0, limit: 10000};
 	Message.find(criteria, options)
 	.then(function (messages) {
 		res.send({"success": true, "data": messages});
@@ -21,6 +23,28 @@ router.get('/messages/:from/:to', function(req, res, next) {
 		return next(error);
 	})
 });
+router.get('/notify_user/:id/:index', function(req, res, next) {
+	var id = Message.Guid(req.params.id);
+	var index = req.params.index;
+
+	Message.findById(id)
+	.then(function (message) {
+		var thread = message.thread;
+		for(var i=0; i<thread.length; i++){
+			if(thread[i].item.index == index){
+				thread[i].item.hasRead = true;
+			}
+		}
+		return Message.updateById(id, {"$set":{"thread": thread}})
+	})
+	.then(function(message){
+		res.send({success: true, data: message});
+	})
+	.fail(function (error) {
+		return next(error);
+	})
+});
+
 router.put('/message', function(req, res, next){
 	var messageId = Message.Guid(req.body.id);
 	Message.findOne({'_id':messageId})
@@ -33,7 +57,10 @@ router.put('/message', function(req, res, next){
 		return Message.updateById(messageId,{"$set":{"thread":message.thread}})
 	})
 	.then(function(message){
-		res.send({'success':true, 'data':message});
+		return updateUser(message);
+	})
+	.then(function(reponse){
+		res.send({'success':true, 'data':response});
 	})
 	.fail(function(error){
 		return next(error);
@@ -43,14 +70,17 @@ router.post('/create_message', function(req, res, next){
 	req.body.created = new Date();
 	req.body.thread[0].item.created = new Date();
 	req.body.thread[0].item.index = 1;
+	var email = {};
 	Message.insert(req.body)
 	.then(function(message){
-		console.log(message);
-		// res.send({"success": true, "data": message});
-		return sendMail(req.body.to, req.body.from, req.body.subject, req.body.thread[0].item.body, message._id, 1)
+		email = message;
+		return updateUser(message);
 	})
-	.then(function (message) {
-		res.send({"success": true, "data": message});
+	.then(function(response){
+		return sendMail(req.body.to, req.body.from, req.body.subject, req.body.thread[0].item.body, email._id, 1)
+	})
+	.then(function (res) {
+		res.send({"success": true, "data": res});
 	})
 	.fail(function (error) {
 		return next(error);
@@ -58,11 +88,11 @@ router.post('/create_message', function(req, res, next){
 });
 var sendMail = function(mailTo, mailFrom, subject, content, messageId, replyId){
 	var deffered = Q.defer();
-  content = '<div>content'+'<img src="http://localhost:5000/notify_user/'+messageId+'/'+replyId+'"/>'+'</div>'
+  content = '<div>content'+'<img src="http://54.169.218.46:5000/notify_user/'+messageId+'/'+replyId+'"/>'+'</div>'
 	var helper = require('sendgrid').mail
 
 	from_email = new helper.Email(mailFrom)
-	to_email = new helper.Email("hemantatiitr@gmail.com")
+	to_email = new helper.Email("hmanwani@grepruby.com")
 	content = new helper.Content("text/html", content)
 	mail = new helper.Mail(from_email, subject, to_email, content)
 
@@ -81,5 +111,19 @@ var sendMail = function(mailTo, mailFrom, subject, content, messageId, replyId){
 	})
 	return deffered.promise;
 }
-
+var updateUser = function(message){
+	var deffered = Q.defer();
+  var email = message.to;
+	User.findOne({"email":email})
+	.then(function(user){
+		return User.updateById(user._id,{"$set":{"follow_up_date": new Date()}});
+	})
+	.then(function(user){
+		deffered.resolve(user);
+	})
+	.fail(function(err){
+		deffered.reject(err);
+	})
+	return deffered.promise;
+}
 module.exports = router;

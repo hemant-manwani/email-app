@@ -9,7 +9,7 @@ var router = require('express').Router(),
 router.get('/users', function(req, res, next) {
 	var criteria = {};
   criteria = util.getFilters(req.query, criteria);
-	var options = util.createQueryOptions(req.query, config.allowedFields.user);
+	var options = {sort:{"follow_up_date": -1}, skip: 0, limit: 10000};//util.createQueryOptions(req.query, config.allowedFields.user);
 	User.find(criteria, options)
 	.then(function (users) {
 		res.send({"success": true, "data": users});

@@ -17,7 +17,7 @@
           </div>
           <div class="col-md-8 col-xs-8">
             <div class="user-name">{{user.firstName}}</div>
-            <div class="last-followed">02/01/17, 11:40 AM</div>
+            <div class="last-followed">{{user.follow_up_date | date: 'dd/MM/yyyy'}}</div>
           </div>
         </div>
       </li>
@@ -31,7 +31,7 @@
             {{message.subject}}
           </div><hr/>
           <li *ngFor = "let thread of message.thread">
-            <div><span>{{message.fromName}}: </span>{{thread.item.body}}</div>
+            <div [class.read]="thread.item.hasRead"><span>{{message.fromName}}: </span>{{thread.item.body}}</div>
           </li>
           <div class="reply"><button class="btn btn-success" type="button" (click)="openReply(message._id)">Reply</button></div>
         </ul>

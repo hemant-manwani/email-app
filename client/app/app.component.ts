@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Headers, Http, RequestOptions } from '@angular/http';
-import 'rxjs/Rx';
+import 'rxjs/add/operator/toPromise';
+
 
 
 @Component({
@@ -59,7 +60,7 @@ export class AppComponent implements OnInit  {
     return this.http
       .post("http://localhost:5000/user", userData, options)
       .toPromise()
-      .then(response => response.json().data as User)
+      .then(response => {this.closeModal();this.users = this.getUsers();})
       .catch(this.handleError);
   }
   getMessages(email: string):void{
@@ -90,7 +91,7 @@ export class AppComponent implements OnInit  {
     return this.http
       .put("http://localhost:5000/message", messageData, options)
       .toPromise()
-      .then(response => response.json().data as Message)
+      .then(response => {this.closeReplyModal();this.users=this.getUsers(); this.getMessages(this.selectedUser);})
       .catch(this.handleError);
   }
   closeReplyModal(){
@@ -122,7 +123,7 @@ export class AppComponent implements OnInit  {
     return this.http
       .post("http://localhost:5000/create_message", newMessageData, options)
       .toPromise()
-      .then(response => response.json().data as Message)
+      .then(response => {this.closeNewMessageModal();this.users=this.getUsers();this.getMessages(this.selectedUser)})
       .catch(this.handleError);
   }
   private handleError(error: any): Promise<any> {

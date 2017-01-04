@@ -34,15 +34,16 @@
           },
           "created": {
             "type": "object"
-          }
+          },
+          "hasRead": {
+        	  "type": "boolean"
+        	}
         }
     }
 	},
   "subject": {
 	  "type": "string"
-	},
-  "hasRead": {
-	  "type": "boolean"
 	}
+
   }
 }

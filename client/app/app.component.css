@@ -142,3 +142,13 @@ section.reply-message, section.compose-message{
   position: fixed;
   right: 12px;
 }
+.read{
+  background: blue;
+  padding: 8px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  background: #b5d6ba;
+}
+.add-user input{
+  width: 100% !important;
+}
