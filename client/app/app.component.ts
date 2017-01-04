@@ -12,13 +12,21 @@ import 'rxjs/Rx';
 
 export class AppComponent implements OnInit  {
   constructor(private http: Http) { }
-
+  showAddUser: boolean;
+  users: Promise<User[]>;
+  newUser: User;
+  messages: Promise<Message[]>
+  currentUser: User;
+  selectedUser: string;
+  replyMessage: boolean;
+  replyMessageId: string;
+  composeMessage: boolean;
   ngOnInit(): void{
     this.showAddUser = false;
     this.setHeight();
     this.users = this.getUsers();
     this.newUser = new User();
-    this.currentUser = {"fromName":"Hemant","email": "hemantmanwani.iitr@gmail.com"};
+    this.currentUser = {_id: "",firstName: "",lastName: "",email: "hmanwani@grepruby.com",fromName: "Hemant", toName:"",technology: "", avatar: "",created: {},follow_up_date: {}};
     this.selectedUser = ""
     this.replyMessage = false;
     this.replyMessageId = "";
@@ -30,7 +38,7 @@ export class AppComponent implements OnInit  {
 
   getUsers(): Promise<User[]>{
     return this.http
-             .get("http://localhost:3000/users")
+             .get("http://localhost:5000/users")
              .toPromise()
              .then(response => response.json().data as User[])
              .catch(this.handleError);
@@ -41,16 +49,18 @@ export class AppComponent implements OnInit  {
   closeModal(): void{
     this.showAddUser = false;
   }
-  addUser(): void{
+  addUser(): any{
     let data = this.newUser;
     if(data.email == undefined || data.email == null)
       return;
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
-    data = JSON.stringify(data);
+    let userData = JSON.stringify(data);
     return this.http
-      .post("http://localhost:3000/user", data, options)
-      .subscribe((res)=>{console.log(res)},(err)=>{console.log(err)})
+      .post("http://localhost:5000/user", userData, options)
+      .toPromise()
+      .then(response => response.json().data as User)
+      .catch(this.handleError);
   }
   getMessages(email: string):void{
     console.log("hello")
@@ -60,7 +70,7 @@ export class AppComponent implements OnInit  {
   requestMessages(email: string): Promise<Message[]>{
 
     return this.http
-           .get("http://localhost:3000/messages/"+this.currentUser.email+"/"+email)
+           .get("http://localhost:5000/messages/"+this.currentUser.email+"/"+email)
            .toPromise()
            .then(response => response.json().data as Message[])
            .catch(this.handleError);
@@ -69,18 +79,19 @@ export class AppComponent implements OnInit  {
     this.replyMessage = true;
     this.replyMessageId = id;
   }
-  sendMessage(message: string):void{
+  sendMessage(message: string):any{
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
     let data = {
       "id": this.replyMessageId,
       "message": message
     };
-    data = JSON.stringify(data);
+    let messageData = JSON.stringify(data);
     return this.http
-      .put("http://localhost:3000/message", data, options)
-      .subscribe((res)=>{console.log(res)},(err)=>{console.log(err)})
-      .share();
+      .put("http://localhost:5000/message", messageData, options)
+      .toPromise()
+      .then(response => response.json().data as Message)
+      .catch(this.handleError);
   }
   closeReplyModal(){
     this.replyMessage = false;
@@ -91,7 +102,7 @@ export class AppComponent implements OnInit  {
   closeNewMessageModal(){
     this.composeMessage = false;
   }
-  sendNewMessage(subject: string, message: string): void{
+  sendNewMessage(subject: string, message: string): any{
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
     let data = {
@@ -107,11 +118,12 @@ export class AppComponent implements OnInit  {
         }
       ]
     };
-    data = JSON.stringify(data);
+    let newMessageData = JSON.stringify(data);
     return this.http
-      .post("http://localhost:3000/create_message", data, options)
-      .subscribe((res)=>{console.log(res)},(err)=>{console.log(err)})
-      .share();
+      .post("http://localhost:5000/create_message", newMessageData, options)
+      .toPromise()
+      .then(response => response.json().data as Message)
+      .catch(this.handleError);
   }
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
@@ -120,19 +132,21 @@ export class AppComponent implements OnInit  {
 }
 
 class User{
-  _id: string,
-  firstName: string,
-  lastName: string,
-  email: string,
-  technology: string,
-  avatar: string,
-  created: object,
-  follow_up_date: object
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  fromName: string;
+  toName: string;
+  technology: string;
+  avatar: string;
+  created: {};
+  follow_up_date: {};
 }
 class Message{
-  _id: string,
-  from: string,
-  subject: string,
-  thread: Array,
-  to: string
+  _id: string;
+  from: string;
+  subject: string;
+  thread: Array<{}>;
+  to: string;
 }

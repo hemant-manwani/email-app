@@ -1,6 +1,6 @@
 module.exports = {
 	'host': "localhost",
-	'port': 3000,
+	'port': 5000,
 	'db': {
 	 	'mongoAuth': process.env.MONGODB_AUTH,
 	 },

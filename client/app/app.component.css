@@ -138,4 +138,7 @@ section.reply-message, section.compose-message{
 }
 .send-message{
   text-align: right;
+  bottom: 50px;
+  position: fixed;
+  right: 12px;
 }

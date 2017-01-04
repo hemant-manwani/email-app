@@ -27,7 +27,8 @@ router.put('/message', function(req, res, next){
 	.then(function(message){
 		if(message.thread==undefined)
 			message.thread = [];
-		var item = {"item":{body: req.body.message, created: new Date()}}
+		var index = message.thread.length + 1;
+		var item = {"item":{body: req.body.message, created: new Date()}, index: index}
 		message.thread.push(item);
 		return Message.updateById(messageId,{"$set":{"thread":message.thread}})
 	})
@@ -41,10 +42,12 @@ router.put('/message', function(req, res, next){
 router.post('/create_message', function(req, res, next){
 	req.body.created = new Date();
 	req.body.thread[0].item.created = new Date();
-	sendMail(req.body.to, req.body.from, req.body.subject, req.body.thread[0].item.body)
-	.then(function(response){
-		console.log(response);
-		return Message.insert(req.body)
+	req.body.thread[0].item.index = 1;
+	Message.insert(req.body)
+	.then(function(message){
+		console.log(message);
+		// res.send({"success": true, "data": message});
+		return sendMail(req.body.to, req.body.from, req.body.subject, req.body.thread[0].item.body, message._id, 1)
 	})
 	.then(function (message) {
 		res.send({"success": true, "data": message});
@@ -53,17 +56,17 @@ router.post('/create_message', function(req, res, next){
 		return next(error);
 	})
 });
-var sendMail = function(mailTo, mailFrom, subject, content){
+var sendMail = function(mailTo, mailFrom, subject, content, messageId, replyId){
 	var deffered = Q.defer();
-
+  content = '<div>content'+'<img src="http://localhost:5000/notify_user/'+messageId+'/'+replyId+'"/>'+'</div>'
 	var helper = require('sendgrid').mail
 
 	from_email = new helper.Email(mailFrom)
-	to_email = new helper.Email(mailTo)
-	content = new helper.Content("text/plain", content)
+	to_email = new helper.Email("hemantatiitr@gmail.com")
+	content = new helper.Content("text/html", content)
 	mail = new helper.Mail(from_email, subject, to_email, content)
 
-	var sg = require('sendgrid')("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");
+	var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 	var request = sg.emptyRequest({
 	  method: 'POST',
 	  path: '/v3/mail/send',

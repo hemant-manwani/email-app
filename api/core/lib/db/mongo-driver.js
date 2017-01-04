@@ -54,7 +54,8 @@ var mongoDriver = {
 	},
 	insert: function(collectionName, document, cb) {
 		db.collection(collectionName).insert(document, {w: 1}, function(err, doc) {
-			var firstDoc = doc ? doc[0] : doc;
+			console.log(doc);
+			var firstDoc = doc.ops ? doc.ops[0] : doc;
 			cb(err, firstDoc)
 		});
 	},
