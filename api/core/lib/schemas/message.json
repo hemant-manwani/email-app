@@ -8,31 +8,38 @@
 	  "description": "Unique identifier of message Record"
 	},
 	"from": {
-	  "type": "object",
-    "additionalProperties": false,
-    "properties":{
-      "_id": {
-        "type": "object",
-        "description": "Unique identifier of User"
-      }
-    }
-	},
+	  "type": "string"
+  },
   "to": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties":{
-      "_id": {
+    "type": "string"
+  },
+  "created":{
+    "type":"object"
+  },
+  "toName": {
+    "type": "string"
+  },
+  "fromName": {
+    "type": "string"
+  },
+	"thread": {
+	  "type": "array",
+    "description": "Body of the Message",
+    "item": {
         "type": "object",
-        "description": "Unique identifier of User"
-      }
+        "additionalProperties": false,
+        "properties": {
+          "body":{
+            "type": "string"
+          },
+          "created": {
+            "type": "object"
+          }
+        }
     }
-	},
-	"body": {
-	  "type": "string",
-    "description": "Body of the Message"
 	},
   "subject": {
-	  "type": "Subject of the Message"
+	  "type": "string"
 	},
   "hasRead": {
 	  "type": "boolean"

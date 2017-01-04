@@ -42,14 +42,14 @@ section.messages.right{
   font-size: 10px;
   margin-top: 10px;
 }
-.left-message{
+.leftMessage{
   float: left;
 }
-.right-message{
+.rightMessage{
   float: right;
 }
 .messages ul{
-  margin-bottom: 50px;
+  /*margin-bottom: 50px;*/
 }
 .users ul{
   margin-top: 50px;
@@ -86,4 +86,56 @@ header,footer{
   width: 100%;
   background-color: #dadada;
   min-height: 50px;
+}
+.add-user, .reply-message, .compose-message{
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, 0);
+  background: #dadada;
+  border-radius: 6px;
+  z-index: 100;
+}
+.add-user div.form-inline{
+  margin-bottom: 20px;
+}
+.add-user .form-button{
+  text-align: center;
+  padding: 15px;
+}
+.overlay{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: #fff;
+  opacity: 0.9;
+  z-index: 100000;
+}
+.email{
+  background: #e6e6e6;
+}
+.reply{
+  text-align: right;
+  clear: both;
+}
+.messages span{
+  font-weight: bold;
+}
+.subject{
+  padding: 5px;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+form[name='reply-message'], form[name='compose-message']{
+  padding: 10px 20px;
+}
+section.reply-message, section.compose-message{
+  padding: 5px 5px 20px 5px;
+}
+.send-message{
+  text-align: right;
 }

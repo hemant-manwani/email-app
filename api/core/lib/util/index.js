@@ -44,6 +44,7 @@ exports.getFilters = function (queryParams, filters) {
 	var queryConditions = {};
 	if(queryParams.filter){
 		queryConditions = JSON.parse(queryParams.filter);
+		console.log(queryConditions);
 		parseConditions(queryConditions)
 	}
 

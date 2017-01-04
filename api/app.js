@@ -8,16 +8,16 @@ if(!config.db.mongoAuth){
   console.log("Error! Could not find MongoDB credentials in config.db.mongoAuth.")
   process.exit(1);
 }
-//SQS Consumers here
 var routes = require('./routes');
 
 var app = express();
 app.use(compress());
-app.use(bodyParser.urlencoded({limit: '5mb', extended: false}));
-app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // hook for CORS
 app.use(function(req, res, next) {
+  console.log(req.url);
   var oneof = false;
   if (req.headers.origin) {
     res.header('Access-Control-Allow-Origin', req.headers.origin);

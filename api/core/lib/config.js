@@ -37,6 +37,6 @@ module.exports = {
 	queryOperators: ['$eq', '$gt', '$gte','$and', '$lt','$all','$in', '$lte', '$ne', '$nin', '$exists', '$elemMatch', '$regex', '$or'],
 	'allowedFields': {
 			'user': '_id,firstName,lastName,email,created,technology,follow_up_date',
-			'message': '_id,from,to,subject,body,hasRead'
+			'message': '_id,from,to,subject,thread,hasRead,fromName,toName,created'
 		},
 };

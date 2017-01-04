@@ -18,5 +18,14 @@ router.get('/users', function(req, res, next) {
 		return next(error);
 	})
 });
+router.post('/user', function(req, res, next) {
+	User.insert(req.body)
+	.then(function (user) {
+		res.send({"success": true, "data": user});
+	})
+	.fail(function (error) {
+		return next(error);
+	})
+});
 
 module.exports = router;

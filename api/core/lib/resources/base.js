@@ -62,38 +62,6 @@ module.exports = function (collectionName, schemaName, elasticConfig) {
 			return deferred.promise;
 		},
 
-		search: function (criteria, transformFromMongoToEs) {
-			var deferred = Q.defer()
-			if(!elasticConfig || !elasticConfig.index || !elasticConfig.type){
-				deferred.reject(new Error('elasticConfig missing for resource'))
-				return deferred.promise;
-			}
-
-			db.elastic.search(elasticConfig.index, elasticConfig.type, criteria, transformFromMongoToEs)
-			.then(function (result) {
-				var data = result.hits.hits.map(function (doc) {
-					return doc._source
-				})
-
-				deferred.resolve({'count': result.hits.total, 'data': data, "took": result.took})
-			})
-			.fail(deferred.reject)
-			return deferred.promise;
-		},
-
-		esCount: function (criteria, transformFromMongoToEs) {
-			var deferred = Q.defer()
-			if(!elasticConfig || !elasticConfig.index || !elasticConfig.type){
-				deferred.reject(new Error('elasticConfig missing for resource'))
-				return deferred.promise;
-			}
-
-			db.elastic.count(elasticConfig.index, elasticConfig.type, criteria, transformFromMongoToEs)
-			.then(deferred.resolve)
-			.fail(deferred.reject)
-			return deferred.promise;
-		},
-
 		count: function (criteria, options) {
 			options = options || {};
 			var deferred = Q.defer();
