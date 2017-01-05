@@ -39,7 +39,7 @@ export class AppComponent implements OnInit  {
 
   getUsers(): Promise<User[]>{
     return this.http
-             .get("http://localhost:5000/users")
+             .get("http://54.169.218.46/users")
              .toPromise()
              .then(response => response.json().data as User[])
              .catch(this.handleError);
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit  {
     let options = new RequestOptions({ headers: headers });
     let userData = JSON.stringify(data);
     return this.http
-      .post("http://localhost:5000/user", userData, options)
+      .post("http://54.169.218.46/user", userData, options)
       .toPromise()
       .then(response => {this.closeModal();this.users = this.getUsers();})
       .catch(this.handleError);
@@ -71,7 +71,7 @@ export class AppComponent implements OnInit  {
   requestMessages(email: string): Promise<Message[]>{
 
     return this.http
-           .get("http://localhost:5000/messages/"+this.currentUser.email+"/"+email)
+           .get("http://54.169.218.46/messages/"+this.currentUser.email+"/"+email)
            .toPromise()
            .then(response => response.json().data as Message[])
            .catch(this.handleError);
@@ -89,7 +89,7 @@ export class AppComponent implements OnInit  {
     };
     let messageData = JSON.stringify(data);
     return this.http
-      .put("http://localhost:5000/message", messageData, options)
+      .put("http://54.169.218.46/message", messageData, options)
       .toPromise()
       .then(response => {this.closeReplyModal();this.users=this.getUsers(); this.getMessages(this.selectedUser);})
       .catch(this.handleError);
@@ -121,7 +121,7 @@ export class AppComponent implements OnInit  {
     };
     let newMessageData = JSON.stringify(data);
     return this.http
-      .post("http://localhost:5000/create_message", newMessageData, options)
+      .post("http://54.169.218.46/create_message", newMessageData, options)
       .toPromise()
       .then(response => {this.closeNewMessageModal();this.users=this.getUsers();this.getMessages(this.selectedUser)})
       .catch(this.handleError);
