@@ -27,5 +27,7 @@ router.post('/user', function(req, res, next) {
 		return next(error);
 	})
 });
-
+router.get('/health', function(req, res, next){
+  res.send({success: true, data: null});
+})
 module.exports = router;
