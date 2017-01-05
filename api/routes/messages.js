@@ -66,7 +66,7 @@ router.put('/message', function(req, res, next){
 		return next(error);
 	})
 });
-router.put('/sendgrid_callback', function(req, res, next){
+router.post('/sendgrid_callback', function(req, res, next){
 	var messageId = Message.Guid(req.body.mongo_id);
 	Message.findOne({'_id':messageId})
 	.then(function(message){
