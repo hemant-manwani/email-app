@@ -66,10 +66,30 @@ router.put('/message', function(req, res, next){
 		return next(error);
 	})
 });
+router.put('/sendgrid_callback', function(req, res, next){
+	var messageId = Message.Guid(req.body.mongo_id);
+	Message.findOne({'_id':messageId})
+	.then(function(message){
+		if(message.thread==undefined)
+			message.thread = [];
+		var index = message.thread.length + 1;
+		var item = {"item":{body: req.body.content, created: new Date()}, index: index}
+		message.thread.push(item);
+		return Message.updateById(messageId,{"$set":{"thread":message.thread}})
+	})
+	.then(function(reponse){
+		res.send({'success':true, 'data':response});
+	})
+	.fail(function(error){
+		return next(error);
+	})
+});
 router.post('/create_message', function(req, res, next){
+
 	req.body.created = new Date();
 	req.body.thread[0].item.created = new Date();
 	req.body.thread[0].item.index = 1;
+  var newMessage;
 	var email = {};
 	Message.insert(req.body)
 	.then(function(message){
@@ -77,10 +97,11 @@ router.post('/create_message', function(req, res, next){
 		return updateUser(message);
 	})
 	.then(function(response){
+		newMessage = response;
 		return sendMail(req.body.to, req.body.from, req.body.subject, req.body.thread[0].item.body, email._id, 1)
 	})
-	.then(function (res) {
-		res.send({"success": true, "data": res});
+	.then(function (mailres) {
+		res.send({"success": true, "data": newMessage});
 	})
 	.fail(function (error) {
 		return next(error);
@@ -88,14 +109,17 @@ router.post('/create_message', function(req, res, next){
 });
 var sendMail = function(mailTo, mailFrom, subject, content, messageId, replyId){
 	var deffered = Q.defer();
-  content = '<div>content'+'<img src="http://54.169.218.46:5000/notify_user/'+messageId+'/'+replyId+'"/>'+'</div>'
+  content = '<div>'+content+'<img width="1" height="1" border="0" src="http://54.169.218.46:5000/notify_user/'+messageId+'/'+replyId+'"/>'+'</div>'
 	var helper = require('sendgrid').mail
 
 	from_email = new helper.Email(mailFrom)
 	to_email = new helper.Email("hmanwani@grepruby.com")
 	content = new helper.Content("text/html", content)
 	mail = new helper.Mail(from_email, subject, to_email, content)
-
+	mail.reply_to = {
+		'email': "inbound@proposestory.com",
+		'name': messageId + "||" + replyId
+	};
 	var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 	var request = sg.emptyRequest({
 	  method: 'POST',
