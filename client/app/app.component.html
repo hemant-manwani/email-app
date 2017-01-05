@@ -42,7 +42,7 @@
     </div>
   </section>
   <section class="add-user" *ngIf="showAddUser">
-    <form name="add-user">
+    <form name="add-user"  #addUserForm="ngForm">
       <div class="form-inline">
         <div class="col-md-6 col-xs-6">
           <input [(ngModel)]="newUser.firstName" class="form-control" placeholder="Firstname" name="firstName"/>
@@ -61,7 +61,7 @@
       </div>
       <div class="form-inline">
         <div class="form-button col-md-12 col-xs-12">
-          <button class="btn btn-success" type="button" (click)="addUser()">Submit</button>
+          <button class="btn btn-success" type="button" (click)="addUser();addUserForm.reset();">Submit</button>
           <button class="btn btn-success" type="button" (click)="closeModal()">Close</button>
         </div>
         <!-- <div class="form-button col-md-6 col-xs-6">
@@ -71,13 +71,13 @@
     </form>
   </section>
   <section class="reply-message" *ngIf="replyMessage">
-    <form name="reply-message">
+    <form name="reply-message" #replyMessageForm="ngForm">
       <div class="form-group">
         <textarea #replyMessage class="form-control" rows="5" id="comment" placeholder="Reply Message"></textarea>
       </div>
       <div class="form-inline">
         <div class="form-button col-md-6 col-xs-6">
-          <button class="btn btn-success" type="button" (click)="sendMessage(replyMessage.value)">Send</button>
+          <button class="btn btn-success" type="button" (click)="sendMessage(replyMessage.value); replyMessageForm.reset();">Send</button>
         </div>
         <div class="col-md-6 col-xs-6">
           <button class="btn btn-success" type="button" (click)="closeReplyModal()">Close</button>
@@ -86,7 +86,7 @@
     </form>
   </section>
   <section class="compose-message" *ngIf="composeMessage">
-    <form name="compose-message">
+    <form name="compose-message" #composeMessageForm="ngForm">
       <div class="form-group">
         <input #newSubject class="form-control" placeholder="Subject"/>
       </div>
@@ -95,7 +95,7 @@
       </div>
       <div class="form-inline">
         <div class="form-button col-md-6 col-xs-6">
-          <button class="btn btn-success" type="button" (click)="sendNewMessage(newSubject.value, newMessage.value)">Send</button>
+          <button class="btn btn-success" type="button" (click)="sendNewMessage(newSubject.value, newMessage.value);composeMessageForm.reset();">Send</button>
         </div>
         <div class="col-md-6 col-xs-6">
           <button class="btn btn-success" type="button" (click)="closeNewMessageModal()">Close</button>
