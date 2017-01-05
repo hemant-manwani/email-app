@@ -137,9 +137,13 @@ var sendMail = function(mailTo, mailFrom, subject, content, messageId, replyId){
 }
 var updateUser = function(message){
 	var deffered = Q.defer();
-  var email = message.to;
+        var email = message.to;
+	if(email==undefined)
+	  email = message.value.to;	
+	console.log(message);
 	User.findOne({"email":email})
 	.then(function(user){
+		console.log(user);
 		return User.updateById(user._id,{"$set":{"follow_up_date": new Date()}});
 	})
 	.then(function(user){
