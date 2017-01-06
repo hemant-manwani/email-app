@@ -27,7 +27,7 @@ export class AppComponent implements OnInit  {
   constructor(private http: Http) {
     this.socket = io('http://54.169.218.46:4000');
     this.socket.on('mailReceived', (data: any) => {
-      this.messages = <any>this.getMessages(this.selectedUser);
+      this.requestMessages(data.to);
     });
   }
   ngOnInit(): void{
@@ -71,14 +71,13 @@ export class AppComponent implements OnInit  {
       .then(response => {this.closeModal();this.users = this.getUsers();})
       .catch(this.handleError);
   }
-  getMessages(email: string):void{
-    console.log("hello")
-    this.selectedUser = email;
-    this.messages = this.requestMessages(email);
-  }
-  requestMessages(email: string): Promise<Message[]>{
-
-    return this.http
+  // getMessages(email: string){
+  //   console.log("hello")
+  //   this.selectedUser = email;
+  //   this.messages = this.requestMessages(email);
+  // }
+  requestMessages(email: string){
+    this.messages = this.http
            .get(this.apiEndpoint + "messages/" + this.currentUser.email+"/"+email)
            .toPromise()
            .then(response => response.json().data as Message[])
@@ -99,7 +98,7 @@ export class AppComponent implements OnInit  {
     return this.http
       .put(this.apiEndpoint + "message", messageData, options)
       .toPromise()
-      .then(response => {this.closeReplyModal();this.users=this.getUsers(); this.getMessages(this.selectedUser);})
+      .then(response => {this.closeReplyModal();this.users=this.getUsers(); this.requestMessages(this.selectedUser);})
       .catch(this.handleError);
   }
   closeReplyModal(){
@@ -131,7 +130,7 @@ export class AppComponent implements OnInit  {
     return this.http
       .post(this.apiEndpoint + "create_message", newMessageData, options)
       .toPromise()
-      .then(response => {this.closeNewMessageModal();this.users=this.getUsers();this.getMessages(this.selectedUser)})
+      .then(response => {this.closeNewMessageModal();this.users=this.getUsers();this.requestMessages(this.selectedUser)})
       .catch(this.handleError);
   }
   private handleError(error: any): Promise<any> {

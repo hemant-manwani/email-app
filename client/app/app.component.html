@@ -10,7 +10,7 @@
       </span>
     </div>
     <ul class="list-group">
-      <li *ngFor = "let user of users | async" class="list-group-item" (click)="getMessages(user.email)">
+      <li *ngFor = "let user of users | async" class="list-group-item" (click)="requestMessages(user.email)">
         <div class="row">
           <div class="col-md-4 col-xs-4">
             <img src="assets/images/user.png" class="img-responsive" width="50" alt="User profile pic"/>
