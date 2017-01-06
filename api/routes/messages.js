@@ -6,7 +6,7 @@ var router = require('express').Router(),
 	User = Core.Resources.User,
   util = Core.Util,
 	config = require('../core/lib/config'),
-	io = require('../app');
+	socketClient = require('../app');
 
 router.get('/messages/:from/:to', function(req, res, next) {
 	var criteria = {
@@ -69,8 +69,10 @@ router.put('/message', function(req, res, next){
 });
 router.post('/sendgrid_callback', function(req, res, next){
 	var messageId = Message.Guid(req.body.mongo_id);
-        Message.findOne({'_id':messageId})
+  var messageObj;
+  Message.findOne({'_id':messageId})
 	.then(function(message){
+		messageObj = message;
 		if(message.thread==undefined)
 			message.thread = [];
 		var index = message.thread.length + 1;
@@ -80,7 +82,7 @@ router.post('/sendgrid_callback', function(req, res, next){
 	})
 	.then(function(reponse){
 		io.on('connection', function (socket) {
-		  socket.emit('mailReceived',"data string");
+		  socket.emit('mailReceived',messageObj);
 		});
 		res.send({'success':true, 'data':response});
 	})
