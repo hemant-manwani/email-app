@@ -29,6 +29,8 @@
     "angular-in-memory-web-api": "~0.2.4",
     "core-js": "^2.4.1",
     "rxjs": "5.0.1",
+    "socket.io": "^1.7.2",
+    "socket.io-client": "^1.7.2",
     "systemjs": "0.19.40",
     "zone.js": "^0.7.4"
   },
@@ -49,7 +51,9 @@
     "protractor": "~4.0.14",
     "rimraf": "^2.5.4",
     "@types/node": "^6.0.46",
-    "@types/jasmine": "^2.5.36"
+    "@types/jasmine": "^2.5.36",
+    "@types/socket.io-client": "^1.4.29"
+
   },
   "repository": {}
 }
