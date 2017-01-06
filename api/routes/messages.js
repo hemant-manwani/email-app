@@ -6,7 +6,7 @@ var router = require('express').Router(),
 	User = Core.Resources.User,
   util = Core.Util,
 	config = require('../core/lib/config'),
-	socketClient = require('../app');
+	io = require('../app');
 
 router.get('/messages/:from/:to', function(req, res, next) {
 	var criteria = {
