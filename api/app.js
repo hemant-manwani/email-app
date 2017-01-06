@@ -8,6 +8,18 @@ if(!config.db.mongoAuth){
   console.log("Error! Could not find MongoDB credentials in config.db.mongoAuth.")
   process.exit(1);
 }
+
+//socket io code
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+server.listen(4000);
+module.exports = io;
+
+
+//socket io code
+
+
+
 var routes = require('./routes');
 
 var app = express();
@@ -62,6 +74,13 @@ app.use(function(err, req, res, next){
 process.on('uncaughtException', function(err) {
   console.log(err);
 });
+
+
+
+
+
+
+
 
 Core.DB.ensureConnections()
 .then(function () {
