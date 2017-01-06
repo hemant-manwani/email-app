@@ -81,9 +81,7 @@ router.post('/sendgrid_callback', function(req, res, next){
 		return Message.updateById(messageId,{"$set":{"thread":message.thread}})
 	})
 	.then(function(reponse){
-		io.on('connection', function (socket) {
-		  socket.emit('mailReceived',messageObj);
-		});
+		io.socket.emit('mailReceived',messageObj);
 		res.send({'success':true, 'data':response});
 	})
 	.fail(function(error){

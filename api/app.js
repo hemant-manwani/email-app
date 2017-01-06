@@ -13,7 +13,9 @@ if(!config.db.mongoAuth){
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 server.listen(4000);
-module.exports = io;
+io.on('connection', function (socket) {
+  module.exports = {socket: socket, io: io};
+});
 
 
 //socket io code
