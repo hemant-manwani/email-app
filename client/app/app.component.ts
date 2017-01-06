@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Headers, Http, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-
+import * as io from "socket.io-client";
 
 
 @Component({
@@ -12,7 +12,6 @@ import 'rxjs/add/operator/toPromise';
 })
 
 export class AppComponent implements OnInit  {
-  constructor(private http: Http) { }
   showAddUser: boolean;
   users: Promise<User[]>;
   newUser: User;
@@ -22,6 +21,16 @@ export class AppComponent implements OnInit  {
   replyMessage: boolean;
   replyMessageId: string;
   composeMessage: boolean;
+  socket: any;
+  //apiEndpoint = "http://54.169.218.46:5000/";
+  apiEndpoint = "http://localhost:5000/";
+  constructor(private http: Http) {
+    this.socket = io('http://localhost:4000');
+    this.socket.on('mailReceived', function(data: any){
+      console.log("hello");
+      //this.messages = this.getMessages();
+    }.bind(this));
+  }
   ngOnInit(): void{
     this.showAddUser = false;
     this.setHeight();
@@ -39,7 +48,7 @@ export class AppComponent implements OnInit  {
 
   getUsers(): Promise<User[]>{
     return this.http
-             .get("http://54.169.218.46:5000/users")
+             .get(this.apiEndpoint + "users")
              .toPromise()
              .then(response => response.json().data as User[])
              .catch(this.handleError);
@@ -58,7 +67,7 @@ export class AppComponent implements OnInit  {
     let options = new RequestOptions({ headers: headers });
     let userData = JSON.stringify(data);
     return this.http
-      .post("http://54.169.218.46:5000/user", userData, options)
+      .post(this.apiEndpoint + "user", userData, options)
       .toPromise()
       .then(response => {this.closeModal();this.users = this.getUsers();})
       .catch(this.handleError);
@@ -71,7 +80,7 @@ export class AppComponent implements OnInit  {
   requestMessages(email: string): Promise<Message[]>{
 
     return this.http
-           .get("http://54.169.218.46:5000/messages/"+this.currentUser.email+"/"+email)
+           .get(this.apiEndpoint + "messages/" + this.currentUser.email+"/"+email)
            .toPromise()
            .then(response => response.json().data as Message[])
            .catch(this.handleError);
@@ -89,7 +98,7 @@ export class AppComponent implements OnInit  {
     };
     let messageData = JSON.stringify(data);
     return this.http
-      .put("http://54.169.218.46:5000/message", messageData, options)
+      .put(this.apiEndpoint + "message", messageData, options)
       .toPromise()
       .then(response => {this.closeReplyModal();this.users=this.getUsers(); this.getMessages(this.selectedUser);})
       .catch(this.handleError);
@@ -121,7 +130,7 @@ export class AppComponent implements OnInit  {
     };
     let newMessageData = JSON.stringify(data);
     return this.http
-      .post("http://54.169.218.46:5000/create_message", newMessageData, options)
+      .post(this.apiEndpoint + "create_message", newMessageData, options)
       .toPromise()
       .then(response => {this.closeNewMessageModal();this.users=this.getUsers();this.getMessages(this.selectedUser)})
       .catch(this.handleError);
