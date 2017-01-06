@@ -5,8 +5,10 @@ var router = require('express').Router(),
 	Message = Core.Resources.Message,
 	User = Core.Resources.User,
   util = Core.Util,
-	config = require('../core/lib/config'),
-	io = require('../app');
+	config = require('../core/lib/config');
+
+
+	var eventEmitter = require("../app");
 
 router.get('/messages/:from/:to', function(req, res, next) {
 	var criteria = {
@@ -81,7 +83,7 @@ router.post('/sendgrid_callback', function(req, res, next){
 		return Message.updateById(messageId,{"$set":{"thread":message.thread}})
 	})
 	.then(function(reponse){
-		io.socket.emit('mailReceived',messageObj);
+		eventEmitter.emit("mailReceived", messageObj);
 		res.send({'success':true, 'data':response});
 	})
 	.fail(function(error){

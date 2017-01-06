@@ -2,7 +2,11 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     compress = require('compression'),
     config = require('./core/lib/config'),
-    Core = require('./core');
+    Core = require('./core'),
+    events = require('events');
+
+var eventEmitter = new events.EventEmitter();
+
 
 if(!config.db.mongoAuth){
   console.log("Error! Could not find MongoDB credentials in config.db.mongoAuth.")
@@ -13,8 +17,12 @@ if(!config.db.mongoAuth){
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 server.listen(4000);
+
 io.on('connection', function (socket) {
-  module.exports = {socket: socket, io: io};
+  console.log("client connected");
+  eventEmitter.on("mailReceived", function(messageObj){
+    socket.emit("mailReceived", messageObj);
+  })
 });
 
 
@@ -95,3 +103,4 @@ Core.DB.ensureConnections()
     console.log("Error! Failed to establish DB connections.");
     process.exit(1);
 });
+module.exports = eventEmitter;
