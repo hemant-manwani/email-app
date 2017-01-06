@@ -22,10 +22,10 @@ export class AppComponent implements OnInit  {
   replyMessageId: string;
   composeMessage: boolean;
   socket: any;
-  //apiEndpoint = "http://54.169.218.46:5000/";
-  apiEndpoint = "http://localhost:5000/";
+  apiEndpoint = "http://54.169.218.46:5000/";
+  //apiEndpoint = "http://localhost:5000/";
   constructor(private http: Http) {
-    this.socket = io('http://localhost:4000');
+    this.socket = io('http://54.169.218.46:4000');
     this.socket.on('mailReceived', function(data: any){
       console.log("hello");
       //this.messages = this.getMessages();
