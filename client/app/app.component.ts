@@ -28,7 +28,7 @@ export class AppComponent implements OnInit  {
     this.socket = io('http://54.169.218.46:4000');
     this.socket.on('mailReceived', function(data: any){
       console.log("hello");
-      //this.messages = this.getMessages();
+      this.messages = this.getMessages();
     }.bind(this));
   }
   ngOnInit(): void{
